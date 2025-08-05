@@ -1,6 +1,4 @@
 import mongoose from "mongoose";
-import { lowercase, trim } from "zod";
-import { required } from "zod/mini/index.cjs";
 
 const { Schema } = mongoose;
 
@@ -32,3 +30,7 @@ const userSchema = new Schema({
         timestamps: true
     }
 );
+
+const userModel = mongoose.model('User', userSchema);
+
+export default userModel;
