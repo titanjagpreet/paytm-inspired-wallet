@@ -17,8 +17,7 @@ const signupSchema = z.object({
     .email({ message: "Invalid email address" })
     .max(30, { message: "Email must be below 30 characters" }),
 
-  password: z
-    .string()
+  password: z.string()
     .min(6, { message: "Password must be at least 6 characters" })
     .max(20, { message: "Password must be below 20 characters" })
     .regex(
@@ -30,7 +29,24 @@ const signupSchema = z.object({
     ),
 });
 
-export default function validateSignup(
+const signinSchema = z.object({
+  email: z.string()
+    .email({ message: "Invalid email address" })
+    .max(30, { message: "Email must be below 30 characters" }),
+
+  password: z.string()
+    .min(6, { message: "Password must be at least 6 characters" })
+    .max(20, { message: "Password must be below 20 characters" })
+    .regex(
+      /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[@!%*?&#$^])[A-Za-z\d@!%*?&#$^]{8,20}$/,
+      {
+        message:
+          "Password must include at least one uppercase, one lowercase, one number, and one special character (@!%*?&)",
+      }
+    ),
+});
+
+function validateSignup(
   req: Request,
   res: Response,
   next: NextFunction
@@ -49,3 +65,23 @@ export default function validateSignup(
   }
 }
 
+function validateSignin(
+  req: Request,
+  res: Response,
+  next: NextFunction
+) {
+  try{
+    signinSchema.parse(req.body);
+    next();
+  } catch(err) {
+    if (err instanceof z.ZodError) {
+      return res.status(400).json({
+        errors: err.flatten().fieldErrors,
+      });
+    }
+
+    return res.status(500).json({ message: "Internal server error" });
+  }
+}
+
+export { validateSignup, validateSignin };
