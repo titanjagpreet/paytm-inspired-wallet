@@ -5,14 +5,19 @@ import { Request, Response } from "express";
 import dotenv from "dotenv";
 dotenv.config();
 
+interface AuthenticatedRequest extends Request {
+    userid?: string; // or `userid` if you use that consistently
+}
+
 const signupUser = async (req: Request, res: Response) => {
     try {
 
-        const { firstName, lastName, email, password } = req.body;
+        const { firstName, lastName, username, email, password } = req.body;
 
-        const alreadyExists = await userModel.findOne({ email });
+        const emailExists = await userModel.findOne({ email });
+        const usernameExists = await userModel.findOne({ username });
 
-        if (alreadyExists) {
+        if (emailExists || usernameExists) {
             return res.status(409).json({
                 message: "User with this email already exists"
             })
@@ -23,6 +28,7 @@ const signupUser = async (req: Request, res: Response) => {
         const user = await userModel.create({
             firstName: firstName,
             lastName: lastName,
+            username: username,
             email: email,
             password: hashedPassword
         })
@@ -46,9 +52,9 @@ const signupUser = async (req: Request, res: Response) => {
 
 const signinUser = async (req: Request, res: Response) => {
     try {
-        const { email, password } = req.body;
+        const { username, password } = req.body;
 
-        const userExists = await userModel.findOne({ email });
+        const userExists = await userModel.findOne({ username });
 
         if (!userExists) {
             return res.status(404).json({
@@ -86,4 +92,76 @@ const signinUser = async (req: Request, res: Response) => {
     }
 }
 
-export { signupUser, signinUser };
+const updateEmail = async (req: AuthenticatedRequest, res: Response) => {
+    try {
+        const { email } = req.body;
+        const userid = req.userid;
+        const user = await userModel.findById(userid);
+
+        if (email == user?.email) {
+            return res.status(400).json({
+                message: "Please enter new email id"
+            })
+        }
+
+        const emailInUse = await userModel.findOne({ email });
+
+        if (emailInUse) {
+            return res.status(400).json({
+                message: "This email is already in use by someone else"
+            })
+        }
+
+        const updatedUser = await userModel.findByIdAndUpdate(userid, { email: email }, { new: true });
+
+        return res.status(200).json({
+            message: "Email updated successfully",
+            userEmail: updatedUser?.email
+        });
+        
+    } catch (err) {
+        if (err instanceof Error) {
+            res.status(500).json({ message: err.message });
+        } else {
+            res.status(500).json({ message: "An unknown error occurred" });
+        }
+    }
+}
+
+const updateUsername = async (req: AuthenticatedRequest, res: Response) => {
+    try {
+        const { username } = req.body;
+        const userid = req.userid;
+        const user = await userModel.findById(userid);
+
+        if (username == user?.username) {
+            return res.status(400).json({
+                message: "Please enter new username"
+            })
+        }
+
+        const usernameInUse = await userModel.findOne({ username });
+
+        if (usernameInUse) {
+            return res.status(400).json({
+                message: "This username is already used by someone else"
+            })
+        }
+
+        const updatedUser = await userModel.findByIdAndUpdate(userid, { username: username }, { new: true });
+
+        return res.status(200).json({
+            message: "Username updated successfully",
+            username: updatedUser?.username
+        });
+        
+    } catch (err) {
+        if (err instanceof Error) {
+            res.status(500).json({ message: err.message });
+        } else {
+            res.status(500).json({ message: "An unknown error occurred" });
+        }
+    }
+}
+
+export { signupUser, signinUser, updateEmail, updateUsername };
