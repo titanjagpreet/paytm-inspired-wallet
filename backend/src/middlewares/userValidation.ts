@@ -12,6 +12,15 @@ const signupSchema = z.object({
     .min(3, { message: "Last name must be at least 3 characters" })
     .max(15, { message: "Last name must be below 15 characters" }),
 
+  username: z
+    .string()
+    .min(4, "Username must be at least 4 characters")
+    .max(20, "Username must be below 20 characters")
+    .refine((val) => val.trim() !== "", {
+      message: "Username cannot be empty or whitespace",
+    })
+    .transform((val) => val.trim().toLowerCase()),
+
   email: z
     .string()
     .email({ message: "Invalid email address" })
@@ -30,9 +39,14 @@ const signupSchema = z.object({
 });
 
 const signinSchema = z.object({
-  email: z.string()
-    .email({ message: "Invalid email address" })
-    .max(30, { message: "Email must be below 30 characters" }),
+  username: z
+    .string()
+    .min(4, "Username must be at least 4 characters")
+    .max(20, "Username must be below 20 characters")
+    .refine((val) => val.trim() !== "", {
+      message: "Username cannot be empty or whitespace",
+    })
+    .transform((val) => val.trim().toLowerCase()),
 
   password: z.string()
     .min(6, { message: "Password must be at least 6 characters" })
@@ -45,6 +59,23 @@ const signinSchema = z.object({
       }
     ),
 });
+
+const updateEmailSchema = z.object({
+  email: z.string()
+    .email({ message: "Invalid email address" })
+    .max(30, { message: "Email must be below 30 characters" }),
+})
+
+const updateUsernameSchema = z.object({
+  username: z
+    .string()
+    .min(4, "Username must be at least 4 characters")
+    .max(20, "Username must be below 20 characters")
+    .refine((val) => val.trim() !== "", {
+      message: "Username cannot be empty or whitespace",
+    })
+    .transform((val) => val.trim().toLowerCase()),
+})
 
 function validateSignup(
   req: Request,
@@ -70,10 +101,10 @@ function validateSignin(
   res: Response,
   next: NextFunction
 ) {
-  try{
+  try {
     signinSchema.parse(req.body);
     next();
-  } catch(err) {
+  } catch (err) {
     if (err instanceof z.ZodError) {
       return res.status(400).json({
         errors: err.flatten().fieldErrors,
@@ -84,4 +115,40 @@ function validateSignin(
   }
 }
 
-export { validateSignup, validateSignin };
+function validateEmail(
+  req: Request,
+  res: Response,
+  next: NextFunction
+) {
+  try {
+    updateEmailSchema.parse(req.body);
+    next();
+  } catch (err) {
+    if (err instanceof z.ZodError) {
+      return res.status(400).json({
+        errors: err.flatten().fieldErrors,
+      });
+    }
+    return res.status(500).json({ message: "Internal server error" });
+  }
+}
+
+function validateUsername(
+  req: Request,
+  res: Response,
+  next: NextFunction
+) {
+  try {
+    updateUsernameSchema.parse(req.body);
+    next();
+  } catch (err) {
+    if (err instanceof z.ZodError) {
+      return res.status(400).json({
+        errors: err.flatten().fieldErrors,
+      });
+    }
+    return res.status(500).json({ message: "Internal server error" });
+  }
+}
+
+export { validateSignup, validateSignin, validateEmail, validateUsername };
