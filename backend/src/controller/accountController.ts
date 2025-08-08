@@ -36,7 +36,7 @@ const getBalance = async (req: AuthenticatedRequest, res: Response) => {
 }
 
 const getTransactions = async (req: AuthenticatedRequest, res: Response) => {
-     try {
+    try {
         const userId = req.userid;
 
         if (!userId) {
@@ -57,13 +57,43 @@ const getTransactions = async (req: AuthenticatedRequest, res: Response) => {
                 { to: accountId }
             ]
         })
-        .sort({ timestamp: -1 })
-        .populate("from", "userId")
-        .populate("to", "userId"); 
+            .sort({ createdAt: -1 })
+            .populate({
+                path: "from",
+                populate: {
+                    path: "userId",
+                    select: "username name"
+                }
+            })
+            .populate({
+                path: "to",
+                populate: {
+                    path: "userId",
+                    select: "username name"
+                }
+            });
+
+        const formattedTxns = transactions.map((txn) => {
+            const isSent = txn.from._id.toString() === accountId.toString();
+
+            const counterpartyAccount = isSent ? txn.to : txn.from;
+            const counterpartyUser = (counterpartyAccount as any)?.userId;
+
+            return {
+                type: isSent ? 'sent' : 'received',
+                user: counterpartyUser?.username ?? 'unknown_user',
+                name: counterpartyUser?.name ?? 'Unknown',
+                amount: parseFloat(txn.amount.toString()),
+                currency: txn.currency,
+                date: txn.createdAt,
+                status: txn.status,
+                note: txn.note
+            };
+        });
 
         return res.status(200).json({
             message: "Transactions fetched successfully",
-            transactions,
+            transactions: formattedTxns,
         });
     } catch (err) {
         console.error("Error fetching transactions:", err);
@@ -72,7 +102,7 @@ const getTransactions = async (req: AuthenticatedRequest, res: Response) => {
         }
         return res.status(500).json({ message: "An unknown error occurred" });
     }
-}
+};
 
 const transferMoney = async (req: AuthenticatedRequest, res: Response) => {
     try {

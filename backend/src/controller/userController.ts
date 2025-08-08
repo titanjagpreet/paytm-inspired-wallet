@@ -101,6 +101,33 @@ const signinUser = async (req: Request, res: Response) => {
     }
 }
 
+const getProfile = async (req: AuthenticatedRequest, res: Response) => {
+    try {
+        const userid = req.userid;
+        const user = await userModel.findById(userid).select("firstName lastName username email");
+
+        if (!user) {
+            return res.status(404).json({
+                message: "User not found"
+            });
+        }
+
+        return res.status(200).json({
+            firstName: user.firstName,
+            lastName: user.lastName,
+            username: user.username,
+            email: user.email
+        });
+
+    } catch (err) {
+        if (err instanceof Error) {
+            res.status(500).json({ message: err.message });
+        } else {
+            res.status(500).json({ message: "An unknown error occurred" });
+        }
+    }
+};
+
 const updateEmail = async (req: AuthenticatedRequest, res: Response) => {
     try {
         const { email } = req.body;
@@ -173,4 +200,4 @@ const updateUsername = async (req: AuthenticatedRequest, res: Response) => {
     }
 }
 
-export { signupUser, signinUser, updateEmail, updateUsername };
+export { signupUser, signinUser, getProfile, updateEmail, updateUsername };
