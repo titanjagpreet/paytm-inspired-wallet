@@ -1,0 +1,217 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+/* WalletX FinTech Design System - Modern, sophisticated, trustworthy */
+
+@layer base {
+  :root {
+    /* Base colors - Clean whites and subtle grays */
+    --background: 0 0% 100%;
+    --foreground: 222 47% 11%;
+
+    /* Card system - Elevated and clean */
+    --card: 0 0% 100%;
+    --card-foreground: 222 47% 11%;
+
+    /* Popover system */
+    --popover: 0 0% 100%;
+    --popover-foreground: 222 47% 11%;
+
+    /* Primary - Deep indigo for trust and finance */
+    --primary: 231 48% 48%;
+    --primary-foreground: 0 0% 100%;
+    --primary-hover: 231 48% 40%;
+
+    /* Secondary - Soft gray for subtle elements */
+    --secondary: 220 13% 96%;
+    --secondary-foreground: 222 47% 11%;
+
+    /* Muted colors for backgrounds */
+    --muted: 220 13% 96%;
+    --muted-foreground: 215 25% 46%;
+
+    /* Accent - Vibrant purple for modern tech feel */
+    --accent: 262 52% 47%;
+    --accent-foreground: 0 0% 100%;
+
+    /* Success - Green for money/positive actions */
+    --success: 142 69% 43%;
+    --success-foreground: 0 0% 100%;
+
+    /* Warning and destructive */
+    --warning: 38 92% 50%;
+    --warning-foreground: 0 0% 100%;
+    --destructive: 0 84% 60%;
+    --destructive-foreground: 0 0% 100%;
+
+    /* Borders and inputs */
+    --border: 220 13% 91%;
+    --input: 220 13% 91%;
+    --ring: 231 48% 48%;
+
+    /* Modern gradients for FinTech feel */
+    --gradient-primary: linear-gradient(135deg, hsl(231 48% 48%), hsl(262 52% 47%));
+    --gradient-hero: linear-gradient(135deg, hsl(231 48% 48%) 0%, hsl(262 52% 47%) 50%, hsl(142 69% 43%) 100%);
+    --gradient-card: linear-gradient(135deg, hsl(0 0% 100%) 0%, hsl(220 13% 98%) 100%);
+    --gradient-feature: linear-gradient(135deg, hsl(231 48% 48% / 0.05) 0%, hsl(262 52% 47% / 0.05) 100%);
+
+    /* Sophisticated shadows */
+    --shadow-sm: 0 1px 2px 0 hsl(220 13% 69% / 0.1);
+    --shadow-md: 0 4px 6px -1px hsl(220 13% 69% / 0.1), 0 2px 4px -1px hsl(220 13% 69% / 0.06);
+    --shadow-lg: 0 10px 15px -3px hsl(220 13% 69% / 0.1), 0 4px 6px -2px hsl(220 13% 69% / 0.05);
+    --shadow-xl: 0 20px 25px -5px hsl(220 13% 69% / 0.1), 0 10px 10px -5px hsl(220 13% 69% / 0.04);
+    --shadow-glow: 0 0 40px hsl(231 48% 48% / 0.15);
+
+    /* Advanced animations */
+    --transition-all: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+    --transition-colors: color 0.2s ease-in-out, background-color 0.2s ease-in-out, border-color 0.2s ease-in-out;
+
+    --radius: 0.75rem;
+
+    --sidebar-background: 0 0% 98%;
+
+    --sidebar-foreground: 240 5.3% 26.1%;
+
+    --sidebar-primary: 240 5.9% 10%;
+
+    --sidebar-primary-foreground: 0 0% 98%;
+
+    --sidebar-accent: 240 4.8% 95.9%;
+
+    --sidebar-accent-foreground: 240 5.9% 10%;
+
+    --sidebar-border: 220 13% 91%;
+
+    --sidebar-ring: 217.2 91.2% 59.8%;
+  }
+
+  .dark {
+    /* Dark mode - Deep backgrounds with enhanced contrast */
+    --background: 222 47% 4%;
+    --foreground: 210 40% 98%;
+
+    /* Dark cards with subtle elevation */
+    --card: 222 47% 6%;
+    --card-foreground: 210 40% 98%;
+
+    /* Dark popovers */
+    --popover: 222 47% 6%;
+    --popover-foreground: 210 40% 98%;
+
+    /* Primary colors adjusted for dark mode */
+    --primary: 231 48% 58%;
+    --primary-foreground: 222 47% 4%;
+    --primary-hover: 231 48% 50%;
+
+    /* Dark secondary colors */
+    --secondary: 222 47% 10%;
+    --secondary-foreground: 210 40% 98%;
+
+    /* Dark muted colors */
+    --muted: 222 47% 10%;
+    --muted-foreground: 215 20% 65%;
+
+    /* Dark accent */
+    --accent: 262 52% 57%;
+    --accent-foreground: 222 47% 4%;
+
+    /* Success in dark mode */
+    --success: 142 69% 53%;
+    --success-foreground: 222 47% 4%;
+
+    /* Warning and destructive for dark */
+    --warning: 38 92% 60%;
+    --warning-foreground: 222 47% 4%;
+    --destructive: 0 84% 70%;
+    --destructive-foreground: 222 47% 4%;
+
+    /* Dark borders and inputs */
+    --border: 222 47% 15%;
+    --input: 222 47% 15%;
+    --ring: 231 48% 58%;
+
+    /* Dark mode gradients */
+    --gradient-primary: linear-gradient(135deg, hsl(231 48% 58%), hsl(262 52% 57%));
+    --gradient-hero: linear-gradient(135deg, hsl(231 48% 58%) 0%, hsl(262 52% 57%) 50%, hsl(142 69% 53%) 100%);
+    --gradient-card: linear-gradient(135deg, hsl(222 47% 6%) 0%, hsl(222 47% 8%) 100%);
+    --gradient-feature: linear-gradient(135deg, hsl(231 48% 58% / 0.1) 0%, hsl(262 52% 57% / 0.1) 100%);
+
+    /* Dark shadows with glow effects */
+    --shadow-sm: 0 1px 2px 0 hsl(222 47% 2% / 0.3);
+    --shadow-md: 0 4px 6px -1px hsl(222 47% 2% / 0.3), 0 2px 4px -1px hsl(222 47% 2% / 0.2);
+    --shadow-lg: 0 10px 15px -3px hsl(222 47% 2% / 0.3), 0 4px 6px -2px hsl(222 47% 2% / 0.2);
+    --shadow-xl: 0 20px 25px -5px hsl(222 47% 2% / 0.4), 0 10px 10px -5px hsl(222 47% 2% / 0.3);
+    --shadow-glow: 0 0 40px hsl(231 48% 58% / 0.3);
+    --sidebar-background: 240 5.9% 10%;
+    --sidebar-foreground: 240 4.8% 95.9%;
+    --sidebar-primary: 224.3 76.3% 48%;
+    --sidebar-primary-foreground: 0 0% 100%;
+    --sidebar-accent: 240 3.7% 15.9%;
+    --sidebar-accent-foreground: 240 4.8% 95.9%;
+    --sidebar-border: 240 3.7% 15.9%;
+    --sidebar-ring: 217.2 91.2% 59.8%;
+  }
+}
+
+@layer base {
+  * {
+    @apply border-border;
+  }
+
+  body {
+    @apply bg-background text-foreground font-inter antialiased;
+    font-feature-settings: "cv02", "cv03", "cv04", "cv11";
+  }
+
+  /* Smooth scrolling for anchor links */
+  html {
+    scroll-behavior: smooth;
+  }
+}
+
+@layer utilities {
+  /* Custom gradient utilities */
+  .gradient-primary {
+    background: var(--gradient-primary);
+  }
+  
+  .gradient-hero {
+    background: var(--gradient-hero);
+  }
+  
+  .gradient-card {
+    background: var(--gradient-card);
+  }
+  
+  .gradient-feature {
+    background: var(--gradient-feature);
+  }
+
+  /* Shadow utilities */
+  .shadow-glow {
+    box-shadow: var(--shadow-glow);
+  }
+
+  /* Animation utilities */
+  .transition-smooth {
+    transition: var(--transition-all);
+  }
+
+  /* Text gradients */
+  .text-gradient {
+    background: var(--gradient-primary);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    background-clip: text;
+  }
+
+  /* Hover effects */
+  .hover-lift {
+    @apply transition-smooth hover:-translate-y-1 hover:shadow-lg;
+  }
+
+  .hover-glow {
+    @apply transition-smooth hover:shadow-glow;
+  }
+}
