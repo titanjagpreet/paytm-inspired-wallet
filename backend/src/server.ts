@@ -1,5 +1,6 @@
 import express from "express";
 import dotenv from "dotenv";
+import cors from "cors";
 import connectDB from "./models/db";
 import userRouter  from "./routes/userRoutes";
 import accountRouter from "./routes/accountRoutes";
@@ -10,6 +11,7 @@ const app = express();
 
 connectDB();
 
+app.use(cors());
 app.use(express.json());
 
 app.use("/api/v1/users", userRouter);
