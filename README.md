@@ -8,7 +8,7 @@
 ![Node.js](https://img.shields.io/badge/Node.js-43853D?style=for-the-badge&logo=node.js&logoColor=white)
 ![MongoDB](https://img.shields.io/badge/MongoDB-4EA94B?style=for-the-badge&logo=mongodb&logoColor=white)
 
-**A sophisticated, full-stack digital wallet platform inspired by Paytm, built with modern technologies and enterprise-grade security.**
+**A sophisticated, full-stack digital wallet platform inspired by Paytm, built with modern technologies in 5 days. Real money is not involved.**
 
 [![Live Demo](https://img.shields.io/badge/Live%20Demo-View%20Project-green?style=for-the-badge)](https://walletx-demo.com)
 [![Documentation](https://img.shields.io/badge/Documentation-Read%20Docs-blue?style=for-the-badge)](https://docs.walletx.com)
@@ -139,7 +139,7 @@
 
 1. **Clone the repository**
    ```bash
-   git clone https://github.com/yourusername/walletx.git
+   git clone https://github.com/titanjagpreet/walletx.git
    cd walletx
    ```
 
@@ -349,7 +349,7 @@ Authorization: Bearer <jwt-token>
 **Request Body:**
 ```json
 {
-  "receiverUsername": "janedoe",
+  "receiverUsername": "johndoe",
   "amount": 100.00
 }
 ```
@@ -505,7 +505,7 @@ CORS_ORIGIN=https://walletx.com
 ### Deployment Platforms
 - **Frontend** - Vercel, Netlify, or AWS S3
 - **Backend** - Heroku, AWS EC2, or Google Cloud
-- **Database** - MongoDB Atlas or AWS DocumentDB
+- **Database** - MongoDB Atlas/Compass or AWS DocumentDB
 - **CDN** - Cloudflare or AWS CloudFront
 
 ### Docker Deployment
@@ -563,10 +563,8 @@ This project is licensed under the MIT License - see the [LICENSE](LICENSE) file
 
 ## 📞 Support
 
-- **Documentation** - [docs.walletx.com](https://docs.walletx.com)
-- **Issues** - [GitHub Issues](https://github.com/yourusername/walletx/issues)
-- **Discussions** - [GitHub Discussions](https://github.com/yourusername/walletx/discussions)
-- **Email** - support@walletx.com
+- **Issues** - [GitHub Issues](https://github.com/titanjagpreet/walletx/issues)
+- **Discussions** - [GitHub Discussions](https://github.com/titanjagpreet/walletx/discussions)
 
 ---
 
@@ -574,8 +572,8 @@ This project is licensed under the MIT License - see the [LICENSE](LICENSE) file
 
 **Made with ❤️ by Jagpreet **
 
-[![GitHub stars](https://img.shields.io/github/stars/yourusername/walletx?style=social)](https://github.com/yourusername/walletx)
-[![GitHub forks](https://img.shields.io/github/forks/yourusername/walletx?style=social)](https://github.com/yourusername/walletx)
-[![GitHub issues](https://img.shields.io/github/issues/yourusername/walletx)](https://github.com/yourusername/walletx/issues)
+[![GitHub stars](https://img.shields.io/github/stars/titanjagpreet/walletx?style=social)](https://github.com/titanjagpreet/walletx)
+[![GitHub forks](https://img.shields.io/github/forks/titanjagpreet/walletx?style=social)](https://github.com/titanjagpreet/walletx)
+[![GitHub issues](https://img.shields.io/github/issues/titanjagpreet/walletx)](https://github.com/titanjagpreet/walletx/issues)
 
 </div>
