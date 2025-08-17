@@ -18,7 +18,9 @@ import {
   ArrowRight,
   ArrowLeft,
   Mail,
-  Settings
+  Settings,
+  Menu,
+  X
 } from "lucide-react";
 
 interface Transaction {
@@ -42,6 +44,7 @@ export default function Dashboard() {
   const [email, setEmail] = useState("");
   const [firstName, setFirstName] = useState("");
   const [lastName, setLastName] = useState("");
+  const [sidebarOpen, setSidebarOpen] = useState(false);
 
   const token = localStorage.getItem("token");
 
@@ -185,8 +188,30 @@ export default function Dashboard() {
       <div className="absolute inset-0 bg-gradient-to-br from-primary/5 via-transparent to-secondary/5" />
       
       <div className="flex relative z-10">
+        {/* Mobile Menu Overlay */}
+        {sidebarOpen && (
+          <div 
+            className="fixed inset-0 bg-black/50 z-40 lg:hidden"
+            onClick={() => setSidebarOpen(false)}
+          />
+        )}
+
         {/* Modern Sidebar */}
-        <aside className="w-64 bg-card/50 backdrop-blur-lg border-r border-border min-h-screen p-6">
+        <aside className={`fixed lg:static inset-y-0 left-0 z-50 w-64 bg-card/50 backdrop-blur-lg border-r border-border min-h-screen p-6 transform transition-transform duration-300 ease-in-out ${
+          sidebarOpen ? 'translate-x-0' : '-translate-x-full lg:translate-x-0'
+        }`}>
+          {/* Mobile Close Button */}
+          <div className="lg:hidden flex justify-end mb-4">
+            <Button
+              variant="ghost"
+              size="sm"
+              onClick={() => setSidebarOpen(false)}
+              className="p-2"
+            >
+              <X className="w-5 h-5" />
+            </Button>
+          </div>
+
           {/* Logo */}
           <div className="mb-8">
             <h1 className="text-2xl font-bold text-gradient">WalletX</h1>
@@ -200,7 +225,13 @@ export default function Dashboard() {
                 key={item.id}
                 whileHover={{ scale: 1.02 }}
                 whileTap={{ scale: 0.98 }}
-                onClick={() => setCurrentView(item.id as 'dashboard' | 'profile')}
+                onClick={() => {
+                  setCurrentView(item.id as 'dashboard' | 'profile');
+                  // Close sidebar on mobile after navigation
+                  if (window.innerWidth < 1024) {
+                    setSidebarOpen(false);
+                  }
+                }}
                 className={`w-full flex items-center space-x-3 px-4 py-3 rounded-lg text-left transition-all duration-200 ${
                   item.active
                     ? 'bg-primary text-primary-foreground shadow-md'
@@ -217,7 +248,13 @@ export default function Dashboard() {
           <motion.button
             whileHover={{ scale: 1.02 }}
             whileTap={{ scale: 0.98 }}
-            onClick={logout}
+            onClick={() => {
+              logout();
+              // Close sidebar on mobile before logout
+              if (window.innerWidth < 1024) {
+                setSidebarOpen(false);
+              }
+            }}
             className="w-full flex items-center space-x-3 px-4 py-3 rounded-lg text-left text-destructive hover:bg-destructive/10 transition-all duration-200"
           >
             <LogOut className="w-5 h-5" />
@@ -226,7 +263,23 @@ export default function Dashboard() {
         </aside>
 
         {/* Main Content */}
-        <main className="flex-1 p-8">
+        <main className="flex-1 p-4 lg:p-8">
+          {/* Mobile Header with Menu Toggle */}
+          <div className="lg:hidden flex items-center justify-between mb-6">
+            <Button
+              variant="ghost"
+              size="sm"
+              onClick={() => setSidebarOpen(true)}
+              className="p-2"
+            >
+              <Menu className="w-5 h-5" />
+            </Button>
+            <div className="flex items-center space-x-2">
+              <Wallet className="w-5 h-5 text-primary" />
+              <span className="text-sm text-muted-foreground">WalletX</span>
+            </div>
+            <div className="w-10" /> {/* Spacer for centering */}
+          </div>
           <motion.div
             initial={{ opacity: 0, y: 20 }}
             animate={{ opacity: 1, y: 0 }}
@@ -238,10 +291,10 @@ export default function Dashboard() {
                 {/* Header */}
                 <div className="flex items-center justify-between">
                   <div>
-                    <h1 className="text-3xl font-bold">Dashboard</h1>
+                    <h1 className="text-2xl lg:text-3xl font-bold">Dashboard</h1>
                     <p className="text-muted-foreground">Welcome back, {username}!</p>
                   </div>
-                  <div className="flex items-center space-x-2">
+                  <div className="hidden lg:flex items-center space-x-2">
                     <Wallet className="w-5 h-5 text-primary" />
                     <span className="text-sm text-muted-foreground">Live balance</span>
                   </div>
@@ -258,7 +311,7 @@ export default function Dashboard() {
                       <div className="flex items-center justify-between">
                         <div>
                           <p className="text-muted-foreground text-sm font-medium">Current Balance</p>
-                          <p className="text-4xl font-bold text-gradient mt-2">₹ {balance.toLocaleString()}</p>
+                          <p className="text-3xl lg:text-4xl font-bold text-gradient mt-2">₹ {balance.toLocaleString()}</p>
                           <p className="text-sm text-muted-foreground mt-2">Available for transfers</p>
                         </div>
                         <div className="w-16 h-16 bg-primary/10 rounded-full flex items-center justify-center">
@@ -270,7 +323,7 @@ export default function Dashboard() {
                 </motion.div>
 
                 {/* Transfer and Chart Grid */}
-                <div className="grid grid-cols-1 lg:grid-cols-2 gap-8">
+                <div className="grid grid-cols-1 lg:grid-cols-2 gap-4 lg:gap-8">
                   {/* Transfer Card */}
                   <motion.div
                     initial={{ opacity: 0, y: 20 }}
@@ -377,7 +430,7 @@ export default function Dashboard() {
                       </CardTitle>
                     </CardHeader>
                     <CardContent>
-                      <div className="space-y-3 max-h-80 overflow-y-auto">
+                      <div className="space-y-3 max-h-60 lg:max-h-80 overflow-y-auto">
                         {transactions.length === 0 ? (
                           <div className="text-center py-8">
                             <History className="w-12 h-12 text-muted-foreground mx-auto mb-4" />
@@ -390,30 +443,30 @@ export default function Dashboard() {
                               key={`${txn.user}-${txn.date}-${txn.amount}`}
                               initial={{ opacity: 0, x: -20 }}
                               animate={{ opacity: 1, x: 0 }}
-                              className="flex items-center justify-between p-4 rounded-lg border border-border/50 hover:bg-muted/30 transition-all duration-200"
+                              className="flex items-center justify-between p-3 lg:p-4 rounded-lg border border-border/50 hover:bg-muted/30 transition-all duration-200"
                             >
-                              <div className="flex items-center space-x-3">
-                                <div className={`w-10 h-10 rounded-full flex items-center justify-center ${
+                              <div className="flex items-center space-x-2 lg:space-x-3 min-w-0 flex-1">
+                                <div className={`w-8 h-8 lg:w-10 lg:h-10 rounded-full flex items-center justify-center flex-shrink-0 ${
                                   txn.type === 'sent' 
                                     ? 'bg-destructive/10 text-destructive' 
                                     : 'bg-success/10 text-success'
                                 }`}>
                                   {txn.type === 'sent' ? (
-                                    <ArrowRight className="w-4 h-4" />
+                                    <ArrowRight className="w-3 h-3 lg:w-4 lg:h-4" />
                                   ) : (
-                                    <ArrowLeft className="w-4 h-4" />
+                                    <ArrowLeft className="w-3 h-3 lg:w-4 lg:h-4" />
                                   )}
                                 </div>
-                                <div>
-                                  <p className="font-medium">
+                                <div className="min-w-0 flex-1">
+                                  <p className="font-medium text-sm lg:text-base truncate">
                                     {txn.type === 'sent' ? "Sent to" : "Received from"} {txn.user}
                                   </p>
-                                  <p className="text-sm text-muted-foreground">
+                                  <p className="text-xs lg:text-sm text-muted-foreground">
                                     {new Date(txn.date).toLocaleString()}
                                   </p>
                                 </div>
                               </div>
-                              <div className={`font-semibold ${
+                              <div className={`font-semibold text-sm lg:text-base flex-shrink-0 ${
                                 txn.type === 'sent' ? 'text-destructive' : 'text-success'
                               }`}>
                                 {txn.type === 'sent' ? '-' : '+'}₹ {txn.amount.toLocaleString()}
@@ -433,10 +486,10 @@ export default function Dashboard() {
                 {/* Profile Header */}
                 <div className="flex items-center justify-between">
                   <div>
-                    <h1 className="text-3xl font-bold">Profile Settings</h1>
+                    <h1 className="text-2xl lg:text-3xl font-bold">Profile Settings</h1>
                     <p className="text-muted-foreground">Manage your account information</p>
                   </div>
-                  <div className="flex items-center space-x-2">
+                  <div className="hidden lg:flex items-center space-x-2">
                     <Settings className="w-5 h-5 text-primary" />
                     <span className="text-sm text-muted-foreground">Account settings</span>
                   </div>
@@ -447,7 +500,7 @@ export default function Dashboard() {
                   initial={{ opacity: 0, y: 20 }}
                   animate={{ opacity: 1, y: 0 }}
                   transition={{ duration: 0.6 }}
-                  className="max-w-2xl"
+                  className="w-full max-w-2xl"
                 >
                   <Card className="gradient-card border-0 shadow-xl hover-lift">
                     <CardHeader>
@@ -484,7 +537,7 @@ export default function Dashboard() {
                   initial={{ opacity: 0, y: 20 }}
                   animate={{ opacity: 1, y: 0 }}
                   transition={{ duration: 0.6, delay: 0.1 }}
-                  className="max-w-2xl"
+                  className="w-full max-w-2xl"
                 >
                   <Card className="gradient-card border-0 shadow-xl hover-lift">
                     <CardHeader>
