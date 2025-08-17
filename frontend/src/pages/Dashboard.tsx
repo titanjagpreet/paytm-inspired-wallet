@@ -160,12 +160,45 @@ export default function Dashboard() {
     fetchProfile();
   }, []);
 
-  const balanceData = transactions.reduce<{ name: string; balance: number }[]>((acc, txn, index) => {
-    const lastBalance = acc.length > 0 ? acc[acc.length - 1].balance : balance;
-    const newBalance = txn.type === 'sent' ? lastBalance - txn.amount : lastBalance + txn.amount;
-    acc.push({ name: new Date(txn.date).toLocaleDateString(), balance: newBalance });
-    return acc;
-  }, []);
+  // Calculate balance trend by working backwards from current balance
+  const balanceData = (() => {
+    if (transactions.length === 0) {
+      return [{ name: new Date().toLocaleDateString(), balance: balance }];
+    }
+
+    // Sort transactions by date (newest first)
+    const sortedTransactions = [...transactions].sort((a, b) => 
+      new Date(b.date).getTime() - new Date(a.date).getTime()
+    );
+
+    // Calculate balance at each transaction point
+    const balanceHistory: { name: string; balance: number }[] = [];
+    let runningBalance = balance;
+
+    // Add current balance as the first point
+    balanceHistory.push({ 
+      name: new Date().toLocaleDateString(), 
+      balance: runningBalance 
+    });
+
+    // Work backwards through transactions
+    sortedTransactions.forEach((txn) => {
+      // Reverse the transaction to get the balance before this transaction
+      if (txn.type === 'sent') {
+        runningBalance += txn.amount; // Add back what was sent
+      } else {
+        runningBalance -= txn.amount; // Subtract what was received
+      }
+      
+      balanceHistory.push({ 
+        name: new Date(txn.date).toLocaleDateString(), 
+        balance: runningBalance 
+      });
+    });
+
+    // Reverse to show chronological order (oldest to newest)
+    return balanceHistory.reverse();
+  })();
 
   const sidebarItems = [
     {
